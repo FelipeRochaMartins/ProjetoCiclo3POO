@@ -12,8 +12,14 @@ public class ConexaoBanco {
     private static final String USUARIO = "postgres";
     private static final String SENHA = "senha";
 
-    private Connection conectar() throws SQLException {
-        return DriverManager.getConnection(URL, USUARIO, SENHA);
+    public Connection conectar() throws SQLException {
+        try {
+            // Tentar carregar o driver explicitamente
+            Class.forName("org.postgresql.Driver");
+            return DriverManager.getConnection(URL, USUARIO, SENHA);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver PostgreSQL não encontrado", e);
+        }
     }
 
     public void salvarConta(Conta conta) {
